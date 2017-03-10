@@ -53,19 +53,21 @@ public class Calculator {
         int rightnumber = 0 ;
         int flag = number;
 
+        System.out.println("输入exit可以结束做题");
+
         NumberFormat numberFormat = NumberFormat.getInstance();
         numberFormat.setMaximumFractionDigits(2);
 
         for(int i=0;i<number;i++){
             trueanswer[i] = setQusetion();
             answer[i] = inputNumber();
-            if (answer[i].equals("exit")){
-                flag = i+1;
-                break;
-            }
             while (!isAnswer(answer[i])){
                 System.out.println("输入错误！请重新输入：");
                 answer[i] = inputNumber();
+            }
+            if (answer[i].equals("exit")){
+                flag = i+1;
+                break;
             }
             if (trueanswer[i].equals(answer[i])){
                 rightnumber++;
@@ -84,7 +86,7 @@ public class Calculator {
         if (str.substring(str.indexOf("/")+1).equals("0")&&!str.equals("0")){
             return false;
         }
-        else if (Pattern.compile("[-/0-9]*").matcher(str).matches()){
+        else if (Pattern.compile("[-/0-9]*").matcher(str).matches()||str.equals("exit")){
             return true;
         }
         else{
