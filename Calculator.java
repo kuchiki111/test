@@ -15,11 +15,11 @@ public class Calculator {
     public static int enterNumber() {
         String number = null;
 
-        System.out.println("请输入做题数:");
+        System.out.println("请输入做题数：");
         number = inputNumber();
 
         while (!isNumber(number)) {
-            System.out.println("输入错误！请重新输入:");
+            System.out.println("输入错误！请重新输入：");
             number = inputNumber();
         }
 
@@ -46,10 +46,12 @@ public class Calculator {
         return number.replace(" ","");
     }
 
+
     public static void question(int number){
-        String trueanswer[] = new String[number];
-        String answer[] = new String[number];
-        int rightnumber =0 ;
+        String[] trueanswer = new String[number];
+        String[] answer = new String[number];
+        int rightnumber = 0 ;
+        int flag = number;
 
         NumberFormat numberFormat = NumberFormat.getInstance();
         numberFormat.setMaximumFractionDigits(2);
@@ -57,22 +59,43 @@ public class Calculator {
         for(int i=0;i<number;i++){
             trueanswer[i] = setQusetion();
             answer[i] = inputNumber();
+            if (answer[i].equals("exit")){
+                flag = i+1;
+                break;
+            }
+            while (!isAnswer(answer[i])){
+                System.out.println("输入错误！请重新输入：");
+                answer[i] = inputNumber();
+            }
             if (trueanswer[i].equals(answer[i])){
                 rightnumber++;
             }
-        }
-        System.out.println("共做"+number+"道题，正确："+rightnumber+",错误:"+(number-rightnumber)+
-                "，正确率："+numberFormat.format((float)rightnumber/(float)number*100)+"%^");
 
-        for (int i=0;i<number;i++){
-            System.out.println("第"+(i+1)+"题答案:"+trueanswer[i]);
+        }
+        System.out.println("共做"+flag+"道题，正确："+rightnumber+",错误："+(flag-rightnumber)+
+                "，正确率："+numberFormat.format((float)rightnumber/(float)flag*100)+"%^");
+
+        for (int i=0;i<flag;i++){
+            System.out.println("第"+(i+1)+"题答案："+trueanswer[i]);
+        }
+    }
+
+    public static boolean isAnswer(String str){
+        if (str.substring(str.indexOf("/")+1).equals("0")&&!str.equals("0")){
+            return false;
+        }
+        else if (Pattern.compile("[-/0-9]*").matcher(str).matches()){
+            return true;
+        }
+        else{
+            return false;
         }
     }
 
     public static String setQusetion(){
         int symbol;
-        int number1[] = new int[2];
-        int number2[] = new int[2];
+        int[] number1 = new int[2];
+        int[] number2 = new int[2];
         String answer = null;
 
         symbol = randomNumber(1,4);
@@ -91,20 +114,20 @@ public class Calculator {
         return randomnum;
     }
     public static int[] randomInt(){
-        int number[] = new int[2];
+        int[] number = new int[2];
         number[1] = 1;
         number[0] = randomNumber(0,100);
         return number;
     }
     public static int[] randomFraction(){
-        int number[] = new int[2];
+        int[] number = new int[2];
         number[1] = randomNumber(2,100);
         number[0] = randomNumber(1,number[1]);
         return number;
     }
 
     public static int[] setModel(int model){
-        int number[] = new int[2];
+        int[] number = new int[2];
         switch (model){
             case 1:
                 number = randomInt();
@@ -119,7 +142,7 @@ public class Calculator {
     }
 
     public static String count(int number1[],int number2[],int symbol){
-        int answer[] = new int[2];
+        int[] answer = new int[2];
 
         switch (symbol){
             case 1:
@@ -149,7 +172,7 @@ public class Calculator {
         return isInt(answer);
     }
     public static void outputQuestion(int number1[],int number2[],String str){
-        String num[] = new String[2];
+        String[] num = new String[2];
 
         number1 = simplification(number1);
         number2 = simplification(number2);
