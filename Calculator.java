@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
 
 public class Calculator {
     static BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+    static int numOfQuestion = 1;
+    static String[] question = new String[1000];
 
     public static int enterNumber() {
         String number = null;
@@ -59,7 +61,7 @@ public class Calculator {
         numberFormat.setMaximumFractionDigits(2);
 
         for(int i=0;i<number;i++){
-            trueanswer[i] = setQusetion();
+            trueanswer[i] = setQuestion();
             answer[i] = inputNumber();
             while (!isAnswer(answer[i])){
                 System.out.println("输入错误！请重新输入：");
@@ -86,7 +88,7 @@ public class Calculator {
         if (str.substring(str.indexOf("/")+1).equals("0")&&!str.equals("0")){
             return false;
         }
-        else if (Pattern.compile("[-/0-9]*").matcher(str).matches()||str.equals("exit")){
+        else if (!str.equals("/")&&!str.equals("-")&&Pattern.compile("[-/0-9]*").matcher(str).matches()||str.equals("exit")){
             return true;
         }
         else{
@@ -94,7 +96,7 @@ public class Calculator {
         }
     }
 
-    public static String setQusetion(){
+    public static String setQuestion(){
         int symbol;
         int[] number1 = new int[2];
         int[] number2 = new int[2];
@@ -108,6 +110,7 @@ public class Calculator {
         answer = count(number1,number2,symbol);
         return answer;
     }
+
 
     public static int randomNumber (int min ,int max){
         Random random = new Random();
@@ -160,12 +163,15 @@ public class Calculator {
             case 3:
                 answer[0] = number1[0]*number2[0];
                 answer[1] = number1[1]*number2[1];
-                outputQuestion(number1,number2,"*");
+                outputQuestion(number1,number2,"×");
                 break;
             case 4:
+                while(number2[0]==0){
+                    number2 = randomInt();
+                }
                 answer[0] = number1[0]*number2[1];
                 answer[1] = number1[1]*number2[0];
-                outputQuestion(number1,number2,"/");
+                outputQuestion(number1,number2,"÷");
                 break;
             default:
                 break;
@@ -182,7 +188,26 @@ public class Calculator {
         num[0] = isInt(number1);
         num[1] = isInt(number2);
 
+//        if (isQuestionExist(num,str)){
+//            setQuestion();
+//            return;
+//        }
+
         System.out.print(num[0]+" "+str+" "+num[1]+" =");
+    }
+
+    public static boolean isQuestionExist(String number[],String symbol){
+        for (int i=0;i<numOfQuestion;i++){
+            if (question[i].equals(number[1]+symbol+number[2])){
+                return true;
+            }
+            else {
+                question[i] = number[1]+symbol+number[2];
+                numOfQuestion++;
+                return false;
+            }
+        }
+        return false;
     }
 
     public static int[] simplification(int number[]){
